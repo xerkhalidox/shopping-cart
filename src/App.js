@@ -1,4 +1,5 @@
 import React from 'react';
+import Cart from './components/Cart/Cart';
 import Filter from './components/Filter/Filter';
 import Products from './components/Products/Products';
 import data from './data.json';
@@ -10,8 +11,33 @@ class App extends React.Component {
       products: data.products,
       size: "ALL",
       sort: "latest",
+      cartItems: []
     };
   }
+
+  addToCart = (product) => {
+    const cartItems = this.state.cartItems.slice();
+    let isInCart = false;
+    cartItems.forEach((item) => {
+      if (item._id === product._id) {
+        item.count++;
+        isInCart = true;
+      }
+    });
+    if (!isInCart) {
+      cartItems.push({ ...product, count: 1 });
+    }
+    this.setState({ cartItems: cartItems });
+  };
+
+  deleteItemFromCart = (givenItem) => {
+    let cartItems = this.state.cartItems.slice();
+    cartItems = cartItems.filter(item =>
+      item._id !== givenItem._id
+    );
+    this.setState({ cartItems: cartItems });
+  };
+
   filterOnSize = (e) => {
     if (e.target.value === 'ALL') {
       this.setState({
@@ -27,6 +53,7 @@ class App extends React.Component {
       });
     }
   };
+
   filterOnSort = (e) => {
     this.setState({
       sort: e.target.value,
@@ -53,6 +80,7 @@ class App extends React.Component {
       })
     });
   };
+
   render() {
     return (
       <div className="grid-container">
@@ -69,9 +97,15 @@ class App extends React.Component {
                 filterOnSize={this.filterOnSize}
                 filterOnSort={this.filterOnSort}
               />
-              <Products products={this.state.products} />
+              <Products products={this.state.products} addToCart={this.addToCart} />
             </section>
-            <aside className="cart">Cart</aside>
+            <aside className="cart">
+              <Cart
+                cartItems={this.state.cartItems}
+                deleteItemFromCart={this.deleteItemFromCart}
+              >
+              </Cart>
+            </aside>
           </section>
         </main>
         <footer>
