@@ -11,7 +11,7 @@ class App extends React.Component {
       products: data.products,
       size: "ALL",
       sort: "latest",
-      cartItems: []
+      cartItems: JSON.parse(localStorage.getItem("cartItems"))
     };
   }
 
@@ -28,6 +28,7 @@ class App extends React.Component {
       cartItems.push({ ...product, count: 1 });
     }
     this.setState({ cartItems: cartItems });
+    localStorage.setItem("cartItems", JSON.stringify(cartItems));
   };
 
   deleteItemFromCart = (givenItem) => {
@@ -36,6 +37,7 @@ class App extends React.Component {
       item._id !== givenItem._id
     );
     this.setState({ cartItems: cartItems });
+    localStorage.setItem("cartItems", JSON.stringify(cartItems));
   };
 
   filterOnSize = (e) => {
@@ -80,7 +82,9 @@ class App extends React.Component {
       })
     });
   };
-
+  createOrder = (order) => {
+    alert(order);
+  };
   render() {
     return (
       <div className="grid-container">
@@ -103,6 +107,7 @@ class App extends React.Component {
               <Cart
                 cartItems={this.state.cartItems}
                 deleteItemFromCart={this.deleteItemFromCart}
+                createOrder={this.createOrder}
               >
               </Cart>
             </aside>
