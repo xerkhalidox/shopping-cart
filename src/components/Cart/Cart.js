@@ -2,6 +2,32 @@ import React, { Component } from 'react';
 import './cart.css';
 
 export default class Cart extends Component {
+    constructor() {
+        super();
+        this.state = {
+            showCheckout: false,
+            name: "",
+            email: "",
+            address: ""
+        };
+    }
+    handleInput = (e) => {
+        this.setState({ [e.target.name]: e.target.value });
+        console.log(this.state);
+    };
+    createOrder = (e) => {
+        e.preventDefault();
+        const order = {
+            email: this.state.email,
+            name: this.state.name,
+            address: this.state.address,
+            cartItems: this.props.cartItems
+        };
+        this.props.createOrder(order);
+    };
+    toggleShowCheckout = () => {
+        this.setState({ showCheckout: true });
+    };
     cartItemsList() {
         const cartItems = this.props.cartItems;
         return cartItems.map((item, index) => {
@@ -30,11 +56,39 @@ export default class Cart extends Component {
                             {index === cartItems.length - 1 &&
                                 <div >
                                     Total:{" "} ${cartItems.reduce((prev, curr) => prev + (curr.price * curr.count), 0)}
-                                    <button className="btn">Proceed</button>
+                                    <button onClick={this.toggleShowCheckout} className="btn">Proceed</button>
                                 </div>
                             }
                         </div>
                     </div>
+                    {this.state.showCheckout && (
+                        <div className="cart">
+                            <form onSubmit={this.createOrder}>
+                                <ul className="form-container">
+                                    <li>
+
+                                        <label>Email</label>
+                                        <input required type="email" name="email" onChange={this.handleInput} />
+                                    </li>
+                                    <li>
+
+                                        <label>Name</label>
+                                        <input required type="text" name="name" onChange={this.handleInput} />
+                                    </li>
+                                    <li>
+
+                                        <label>Address</label>
+                                        <input required type="text" name="address" onChange={this.handleInput} />
+                                    </li>
+                                    <li>
+                                        <button class="btn" type="submit">
+                                            Checkout
+                                        </button>
+                                    </li>
+                                </ul>
+                            </form>
+                        </div>
+                    )}
                 </div>
 
             );
