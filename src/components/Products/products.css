@@ -19,7 +19,8 @@
   justify-content: space-around;
   height: 100%;
 }
-.products img {
+.products img,
+.image {
   max-width: 37rem;
   height: 37rem;
 }
@@ -39,4 +40,19 @@
 
 .btn:hover {
   border: 0.1rem #808080 solid;
+}
+.modal-product-details {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  max-height: 96vh;
+}
+.modal-product-details img {
+  max-height: 100vh;
+  max-width: 46rem;
+  margin: 0 auto;
+}
+.product-description {
+  flex: 1 1;
+  margin: 1rem;
 }

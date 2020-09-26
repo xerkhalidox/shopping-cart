@@ -1,14 +1,27 @@
 import React, { Component } from 'react';
 import './products.css';
+import Fade from 'react-reveal/Fade';
+import Modal from 'react-modal';
+import Zoom from 'react-reveal/Zoom';
 
 export default class Products extends Component {
+  constructor() {
+    super();
+    this.state = {
+      product: null,
+    };
+  }
   productsArray() {
     return this.props.products.map((product, index) => {
       return (
         <li key={index}>
           <div className="product">
-            <a href="/">
-              <img src={product.image} alt={product.title} />
+            <a href={'#' + product._id}>
+              <img
+                src={product.image}
+                alt={product.title}
+                onClick={() => this.openModal(product)}
+              />
               <p>{product.title}</p>
             </a>
             <div className="product-price">
@@ -27,10 +40,59 @@ export default class Products extends Component {
       );
     });
   }
+  openModal(product) {
+    this.setState({ product });
+  }
+  closeModal() {
+    this.setState({ product: null });
+  }
   render() {
+    const { product } = this.state;
     return (
       <div>
-        <ul className="products-list">{this.productsArray()}</ul>
+        <Fade bottom cascade>
+          {' '}
+          <ul className="products-list">{this.productsArray()}</ul>
+        </Fade>
+        {product && (
+          <Modal isOpen onRequestClose={() => this.closeModal()}>
+            <Zoom>
+              <button className="modal-close" onClick={() => this.closeModal()}>
+                X
+              </button>
+              <div className="modal-product-details">
+                <img src={product.image} alt={product.title} />
+                <div className="product-description">
+                  <p>
+                    <strong>{product.title}</strong>
+                  </p>
+                  <p>{product.description}</p>
+                  <p>
+                    Available Sizes:
+                    {product.availableSizes.map((size) => (
+                      <span>
+                        {' '}
+                        <button className="btn">{size}</button>
+                      </span>
+                    ))}
+                  </p>
+                  <div className="product-price">
+                    <p>${product.price}</p>
+                    <button
+                      onClick={() => {
+                        this.props.addToCart(product);
+                        this.closeModal();
+                      }}
+                      className="btn"
+                    >
+                      Add to Cart
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </Zoom>
+          </Modal>
+        )}
       </div>
     );
   }
