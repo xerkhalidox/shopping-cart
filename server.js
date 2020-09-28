@@ -2,11 +2,12 @@ const express = require("express");
 const bodyParse = require("body-parser");
 const mongoose = require("mongoose");
 const shortid = require("shortid");
-
+const { str } = require("./test");
+console.log(str);
 const app = express();
 
 app.use(bodyParse.json());
-mongoose.connect("mongodb+srv://khalid:k123456k@cluster0.3ubin.mongodb.net/twitter?retryWrites=true&w=majority", {
+mongoose.connect(str, {
     useNewUrlParser: true,
     useCreateIndex: true,
     useUnifiedTopology: true
