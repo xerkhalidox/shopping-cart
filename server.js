@@ -3,9 +3,9 @@ const bodyParse = require("body-parser");
 const mongoose = require("mongoose");
 const shortid = require("shortid");
 const { str } = require("./test");
-console.log(str);
+const cors = require("cors");
 const app = express();
-
+app.use(cors);
 app.use(bodyParse.json());
 mongoose.connect(str, {
     useNewUrlParser: true,
@@ -24,7 +24,7 @@ const Product = mongoose.model("products", new mongoose.Schema({
     availableSizes: [String]
 }));
 app.get("/api/products", async (req, res) => {
-    const products = await Product.find();
+    const products = await Product.find({});
     res.send(products);
 });
 app.post("/api/products", async (req, res) => {
